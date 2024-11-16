@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Book Review Platform</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #b4cfb0, #ffc3a0);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .header input[type="text"] {
+            width: 55%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .header button {
+            padding: 5px 20px;
+            background-color: rgb(189, 3, 3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .review-card {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .book-image {
+            flex-shrink: 0;
+            width: 120px;
+            height: 180px;
+            margin-right: 20px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .review-details {
+            flex: 1;
+        }
+        .review-details .book-name, 
+        .review-details .author-name, 
+        .review-details .rating {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .review-details .review {
+            background-color: #e0e0e0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .add-review-btn {
+            background-color: #ffd700;
+            color: black;
+            padding: 10px 15px;
+            margin-top: 85px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            
+        }
+        .input-review {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        a {
+            text-decoration: none;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2 style="color: black;">C²orner</h2>
+            <input type="text" id="searchInput" placeholder="Search by Book Name">
+            <span id="welcomeMessage"></span> <!-- Welcome message with username -->
+            <button  id="addbook" onclick="window.location.href='my.html'" style="text-decoration: none; background-color: #76c7c0; ">MY REVIEW'S</button>
+            <button id="viewbook"   style="text-decoration: none; background-color: #76c7c0;"><a href="view.html" style="color:white;">ADMIN</a></button>
+            <button id="logoutBtn" onclick="window.location.href='login.html'"  style="text-decoration: none; color:white;" ><a href="login.html" style="color:white;">Log Out</a></button>
+            <span id="welcomeMessage"></span> <!-- Welcome message with username -->
+        </div>
+        
+        <div id="bookList"></div> <!-- This will hold the book review cards -->
+    </div>
+
+    <script>
+
+
+
+    const adminPassword = "admin1234";
+        // Display the username in the welcome message if available in localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const username = localStorage.getItem('username');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (username) {
+                welcomeMessage.textContent = `Welcome, ${username}!`;
+            } else {
+                welcomeMessage.textContent = 'Welcome!';
+            }
+        });
+
+        let allBooks=[];
+        // Function to fetch books from the backend
+        async function fetchBooks() {
+    try {
+        const response = await fetch('/api/books'); // Adjust path if necessary
+        allBooks= await response.json();
+        renderBooks(allBooks);  // Renders the latest list of books and reviews
+    } catch (error) {
+        console.error("Error fetching books:", error);
+    }
+}
+
+window.onload = fetchBooks;  // Ensure it fetches books with updated reviews
+
+
+document.getElementById('searchInput').addEventListener('input', function(event) {
+    const searchQuery = event.target.value.toLowerCase(); // Get the lowercase version of the search query
+    const filteredBooks = allBooks.filter(book => book.title.toLowerCase().includes(searchQuery)); // Filter books
+    renderBooks(filteredBooks); // Render the filtered books
+});
+
+
+
+        // Function to render books in the HTML
+        function renderBooks(books) {
+    const bookList = document.getElementById('bookList');
+    bookList.innerHTML = ''; // Clear existing content
+
+    books.forEach(book => {
+        const reviewCard = document.createElement('div');
+        reviewCard.className = 'review-card';
+        reviewCard.dataset.bookId = book._id;
+
+        // Create a string for the reviews
+        const reviewsHtml = book.reviews.map(review => `<li>${review.review} <span>(by ${review.username})</span></li>`).join('');
+        
+        // Check if there are reviews or not
+        const noReviewMessage = reviewsHtml ? '' : '<li class="no-reviews">No reviews yet</li>';
+
+        reviewCard.innerHTML = `
+            <img src="${book.coverImagePath}" alt="Book Cover" class="book-image">
+            <div class="review-details">
+                <div class="book-name">${book.title}</div>
+                <div class="author-name">${book.author}</div>
+                <div class="rating">${book.rating}/5</div>
+                <div class="review">
+                    <ul class="review-list">${reviewsHtml || noReviewMessage}</ul>
+                </div>
+                <input type="text" class="input-review" placeholder="Type your review here" maxlength="100">
+            </div>
+            <button class="add-review-btn" onclick="addReview(this)">Add Review</button>
+        `;
+        bookList.appendChild(reviewCard);
+    });
+}
+
+
+
+        // Function to add a review
+        async function addReview(button) {
+    const reviewCard = button.closest('.review-card');
+    const reviewList = reviewCard.querySelector('.review .review-list');
+    const inputField = reviewCard.querySelector('.input-review');
+    const userReview = inputField.value;
+    const bookId = reviewCard.dataset.bookId;
+
+    // Retrieve the username from localStorage
+    const username = localStorage.getItem('username');
+
+    // Check if the user is logged in
+    if (!username) {
+        alert("You must be logged in to add a review.");
+        return;
+    }
+
+    // Ensure the review is not empty
+    if (userReview.trim() === "") {
+        alert("Please enter a review.");
+        return;
+    }
+
+    // Create new review element
+    const newReview = document.createElement('li');
+    newReview.innerHTML = `${userReview} <span>(by ${username})</span>`;
+    reviewList.prepend(newReview); // Add the new review at the top of the list
+
+    // Remove the "No reviews yet" message if it's the first review
+    const noReviewMessage = reviewList.querySelector('.no-reviews');
+    if (noReviewMessage) {
+        noReviewMessage.remove();
+    }
+
+    // Send the review to the server
+    try {
+        const response = await fetch(`/api/books/${bookId}/reviews`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ review: userReview, username: username }),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(responseData.message || 'Failed to add review');
+        }
+    } catch (error) {
+        console.error("Error adding review:", error);
+        alert("There was an error adding your review. Please try again. Error: " + error.message);
+    }
+
+    // Clear the input field after adding the review
+    inputField.value = '';
+}
+
+
+    
+
+
+
+
+    // Admin access prompt
+    document.getElementById('viewbook').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default button action
+        const enteredPassword = prompt("Authorized access only. Enter pass key:");
+        if (enteredPassword === adminPassword) {
+            window.location.href = 'view.html'; // Redirect to admin page if password is correct
+        } else {
+            alert("Incorrect pass key.");
+        }
+    });
+
+
+        // Fetch and render books when the page loads
+        window.onload = fetchBooks;
+
+
+       
+setInterval(fetchBooks, 100000); // 10000 ms = 10 seconds
+
+    </script>
+
+</body>
+</html>

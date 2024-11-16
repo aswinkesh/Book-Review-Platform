@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Review Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #b4cfb0, #ffc3a0);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header input[type="text"] {
+            width: 85%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .header button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .review-card {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .book-image {
+            flex-shrink: 0;
+            width: 120px;
+            height: 180px;
+            margin-right: 20px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .review-details {
+            flex: 1;
+        }
+        .review-details .book-name, 
+        .review-details .author-name, 
+        .review-details .rating {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .review-details .review {
+            background-color: #e0e0e0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .add-review-btn {
+            background-color: #ffd700;
+            color: black;
+            padding: 10px 15px;
+            margin-top: 85px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .username {
+            font-size: 0.9em;
+            color: #555;
+        }
+       
+        .more-btn {
+            cursor: pointer;
+            text-decoration: none;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2 style="color: black;">C²orner</h2>
+            <input type="text" placeholder="Search by Book Name">
+            <button><a href="registration.html" style="text-decoration: none;color: white;">Sign up</a></button>
+        </div>
+
+        <div class="review-card">
+            
+            <img src="https://images-cdn.ubuy.co.in/65a90a841ff0fb67ef4f78a1-wings-of-fire-an-autobiography.jpg" alt="Book Cover" class="book-image">
+            <div class="review-details">
+                <div class="book-name">WINGS OF FIRE</div>
+                <div class="author-name">A P J ABDUL KALAM</div>
+                <div class="rating">4.5/5</div>
+                <div class="review">
+                    <ul>
+                        <li>super-story <span>(@aswinkesh_a)</span></li>
+                        <li>bad-story <span>(@aswinkesh_a)</span></li>
+                        <li>amazing read <span>(@john_doe)</span></li>
+                    </ul>  
+                    
+                </div>
+            </div>
+            <button class="add-review-btn" onclick="signin()">Add Review</button>
+        </div>
+
+        <div class="review-card">
+            <img src="https://images-cdn.ubuy.co.in/6345f652ec87e81aa558cd24-ubuy-online-shopping.jpg" alt="Book Cover" class="book-image">
+            <div class="review-details">
+                <div class="book-name">JOKER</div>
+                <div class="author-name">ROBERT ROWAN</div>
+                <div class="rating">2.5/5</div>
+                <div class="review">
+                    <ul>
+                        <li>super-story <span>(@aswinkesh_a)</span></li>
+                        <li>bad-story <span>(@aswinkesh_a)</span></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="add-review-btn">Add Review</button>
+        </div>
+
+    </div>
+    <script>
+        function signin(){
+            alert('Sign in to continue...')
+        }
+    </script>
+
+ 
+
+</body>
+</html>
